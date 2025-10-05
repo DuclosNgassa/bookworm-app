@@ -7,6 +7,7 @@ export const useAuthStore = create((set) => ({
     user: null,
     token: null,
     isLoading: false,
+    isCheckingAuth: true,
 
     register: async (username, email, password) => {
         set({ isLoading: true });
@@ -52,13 +53,15 @@ export const useAuthStore = create((set) => ({
 
         } catch (error) {
             console.log("Auth check failed");
+        }finally{
+            set({isCheckingAuth:false})
         }
     },
 
     logout: async () => {
         try {
-            await AsyncStorage.setItem("user", null);
-            await AsyncStorage.setItem("token", null);
+            await AsyncStorage.removeItem("user");
+            await AsyncStorage.removeItem("token");
             set({
                 user: null,
                 token: null,
@@ -86,16 +89,16 @@ export const useAuthStore = create((set) => ({
             })
 
             const data = await response.json();
-            console.log("Data", JSON.stringify(data));
+            //console.log("Data", JSON.stringify(data));
             if (!response.ok) {
                 throw new Error(data.message || "Something went wrong while login");
             }
             await AsyncStorage.setItem("user", JSON.stringify(data.user));
             await AsyncStorage.setItem("token", data.token);
-
+           
             set({
                 token: data.token,
-                user: JSON.stringify(data.user),
+                user: data.user,
                 isLoading: false
             });
             return { success: true };

@@ -2,6 +2,12 @@ import { StyleSheet } from "react-native";
 import COLORS from "../../constants/colors";
 
 const styles = StyleSheet.create({
+    avatar: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        marginRight: 10,
+    },
     container: {
         flex: 1,
         backgroundColor: COLORS.background,
